@@ -1,5 +1,10 @@
 {
   "dependencies": {
     "multer": "^1.4.5-lts.2"
+  },
+  "devDependencies": {
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
+    "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
+    "crypto-browserify": "^3.12.1"
   }
 }
