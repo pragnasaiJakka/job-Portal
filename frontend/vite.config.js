@@ -4,6 +4,8 @@ import { defineConfig } from 'vite';
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill';
 import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill';
 
+// Adding comment to trigger CI build
+
 export default defineConfig({
   plugins: [react()],
   resolve: {
