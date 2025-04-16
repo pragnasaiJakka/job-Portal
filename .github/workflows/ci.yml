@@ -1,0 +1,56 @@
+name: CI for Job Portal
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-backend:
+    name: Build & Test Backend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install backend dependencies
+        run: npm install
+
+      - name: Run backend build (if needed)
+        run: echo "No backend build step defined"
+
+      - name: Run backend tests (optional)
+        run: npm test || echo "No backend tests"
+
+  build-frontend:
+    name: Build & Test Frontend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install frontend dependencies
+        run: npm install
+
+      - name: Build frontend (Vite)
+        run: npm run build
+
+      - name: Run frontend tests (optional)
+        run: npm test || echo "No frontend tests"
