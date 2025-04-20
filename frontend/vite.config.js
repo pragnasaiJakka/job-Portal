@@ -1,14 +1,11 @@
-import { Crypto } from '@peculiar/webcrypto';
-globalThis.crypto = new Crypto();
-
-
 import path from 'path';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill';
 import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill';
+import crypto from 'crypto-browserify'; // Add this line
 
-// Adding comment to trigger CI build
+globalThis.crypto = crypto; // Ensure crypto is polyfilled globally
 
 export default defineConfig({
   plugins: [react()],
