@@ -2,6 +2,8 @@ import dotenv from "dotenv"; // ✅ Keep only one import
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import morgan from "morgan"; // For logging
+import securityHeaders from "./middlewares/security.js"; // Security middleware
 
 import connectDB from "./utils/db.js";
 import userRoute from "./routes/user.route.js";
@@ -9,7 +11,13 @@ import companyRoute from "./routes/company.route.js";
 import jobRoute from "./routes/job.route.js";
 import applicationRoute from "./routes/application.route.js";
 
-dotenv.config();
+// Load environment variables from .env file in the backend directory
+dotenv.config({ path: './backend/.env' });
+
+// Ensure essential environment variables are set
+if (!process.env.JWT_SECRET || !process.env.MONGO_URI || !process.env.PORT) {
+    throw new Error("Missing essential environment variables!");
+}
 
 const app = express();
 
@@ -17,6 +25,12 @@ const app = express();
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true })); 
 app.use(cookieParser());
+
+// Security middleware
+app.use(securityHeaders); // Adds security headers
+
+// Logging middleware
+app.use(morgan(':method :url :status :response-time ms - :res[content-length]')); // Adds logs for each request
 
 // ✅ FIXED CORS
 const corsOptions = {
@@ -26,7 +40,7 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;  // Use PORT from .env or default to 3000
 
 // Test route
 app.get("/", (req, res) => {
