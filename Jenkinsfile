@@ -16,10 +16,10 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 echo '📦 Installing backend dependencies...'
-                sh 'cd backend && npm ci || echo "No backend deps installed."'
+                sh 'cd backend && npm ci || echo "No backend dependencies found or install failed."'
 
                 echo '📦 Installing frontend dependencies...'
-                sh 'cd frontend && npm ci || echo "No frontend deps installed."'
+                sh 'cd frontend && npm ci || echo "No frontend dependencies found or install failed."'
             }
         }
 
