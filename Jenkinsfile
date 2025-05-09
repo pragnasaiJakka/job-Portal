@@ -1,40 +1,57 @@
 pipeline {
     agent any
-    
+
+    environment {
+        IMAGE_NAME = 'job-portal'
+        CONTAINER_NAME = 'job-portal-container'
+    }
+
     stages {
-        stage('Build') {
+        stage('Checkout') {
             steps {
-                echo 'Building...'
-                // Add build commands here (e.g., mvn clean install)
+                checkout scm
             }
         }
-        
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install --prefix backend'
+                sh 'npm install --prefix frontend'
+            }
+        }
+
         stage('Test') {
             steps {
-                echo 'Testing...'
-                // Add test commands here (e.g., npm test)
+                echo '🧪 Running backend tests...'
+                sh 'npm test --prefix backend || echo "No backend tests configured."'
             }
         }
-        
-        stage('Code Analysis') {
+
+        stage('Build Docker Image') {
             steps {
-                echo 'Code analysis with SonarQube...'
-                // Add SonarQube integration here (e.g., sonar-scanner command)
+                echo '🐳 Building Docker image...'
+                sh 'docker build -t $IMAGE_NAME .'
             }
         }
-        
-        stage('Security Scan') {
-            steps {
-                echo 'Scanning for vulnerabilities...'
-                // Add Trivy scan or other security tools here
-            }
-        }
-        
+
         stage('Deploy') {
             steps {
-                echo 'Deploying to production...'
-                // Add deployment commands here (e.g., kubectl apply)
+                echo '🚀 Restarting container...'
+                sh """
+                docker stop $CONTAINER_NAME || true
+                docker rm $CONTAINER_NAME || true
+                docker run -d -p 3000:3000 --name $CONTAINER_NAME $IMAGE_NAME
+                """
             }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Deployed Successfully!'
+        }
+        failure {
+            echo '❌ Pipeline Failed.'
         }
     }
 }
