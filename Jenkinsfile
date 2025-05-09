@@ -14,11 +14,11 @@ pipeline {
         }
 
         stage('Install Dependencies') {
-            steps {
-                sh 'npm install --prefix backend'
-                sh 'npm install --prefix frontend'
-            }
-        }
+    steps {
+        sh 'npm ci --prefix backend'
+        sh 'npm ci --prefix frontend'
+    }
+}
 
         stage('Test') {
             steps {
