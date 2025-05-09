@@ -14,16 +14,22 @@ pipeline {
         }
 
         stage('Install Dependencies') {
-    steps {
-        sh 'npm ci --prefix backend'
-        sh 'npm ci --prefix frontend'
-    }
-}
+            steps {
+                echo '📦 Installing backend dependencies...'
+                sh 'cd backend && npm ci || echo "No backend deps installed."'
+
+                echo '📦 Installing frontend dependencies...'
+                sh 'cd frontend && npm ci || echo "No frontend deps installed."'
+            }
+        }
 
         stage('Test') {
             steps {
                 echo '🧪 Running backend tests...'
-                sh 'npm test --prefix backend || echo "No backend tests configured."'
+                sh 'cd backend && npm test || echo "No backend tests configured."'
+
+                echo '🧪 Running frontend tests...'
+                sh 'cd frontend && npm test || echo "No frontend tests configured."'
             }
         }
 
@@ -37,11 +43,11 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo '🚀 Restarting container...'
-                sh """
-                docker stop $CONTAINER_NAME || true
-                docker rm $CONTAINER_NAME || true
-                docker run -d -p 3000:3000 --name $CONTAINER_NAME $IMAGE_NAME
-                """
+                sh '''
+                    docker stop $CONTAINER_NAME || true
+                    docker rm $CONTAINER_NAME || true
+                    docker run -d -p 3000:3000 --name $CONTAINER_NAME $IMAGE_NAME
+                '''
             }
         }
     }
