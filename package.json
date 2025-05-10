@@ -1,4 +1,9 @@
 {
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "serve": "vite preview"
+  },
   "dependencies": {
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.2"
