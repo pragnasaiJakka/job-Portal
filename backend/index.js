@@ -53,7 +53,8 @@ app.use("/api/v1/company", companyRoute);
 app.use("/api/v1/job", jobRoute);
 app.use("/api/v1/application", applicationRoute);
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     connectDB();
-    console.log(`Server running at port ${PORT}`);
+    console.log(`Server running at http://0.0.0.0:${PORT}`);
 });
+
